@@ -352,7 +352,7 @@
           <path d="M21 33 L28 40 L44 24"></path>
         </svg>
         <h2>Your request has been submitted</h2>
-        <p>The Emit Solar Field Ops team has received your roadshow request and will review it shortly.</p>
+        <p>The Emit Solar Team has received your roadshow request and will review it shortly.</p>
         <div class="success-id-pill">
           <span class="id-label">Request ID</span>
           <span class="id-value" id="s-id">RS-0000</span>
@@ -366,8 +366,6 @@
       </div>
     </div>
   </div>
-
-  <div class="footer-note">Data is shared with the Emit Solar Field Ops team for review.</div>
 </div>
 
 <script>
@@ -511,24 +509,6 @@ async function addRequest(obj) {
   return data;
 }
 
-const TELEGRAM_BOT_TOKEN = '8667949126:AAGyyT--wV1XopBW9JrKIgE7mSC9ADliIT4';
-const TELEGRAM_CHAT_ID = '7497758628';
-
-function notifyTelegram(obj){
-  const text =
-    `New Roadshow Request\n` +
-    `ID: ${obj.id}\n` +
-    `Company: ${obj.company}\n` +
-    `Email: ${obj.email}\n` +
-    `Dates: ${obj.startDate} to ${obj.endDate}`;
-
-  fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
-  }).catch(e => console.warn('Telegram notification failed:', e));
-}
-
 const GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzgX__2rBFdAioNoAsSm6LsP7QrA9_ipW9lvpCZE2hs4Oo3UI67alHPrb144F3tCLh8/exec';
 
 function saveToGoogleSheet(obj){
@@ -630,7 +610,6 @@ document.getElementById('submit-btn').addEventListener('click', async ()=>{
     await addRequest(obj);
     msg.textContent = '';
     msg.className = 'status-msg';
-    notifyTelegram(obj);
     saveToGoogleSheet(obj);
     showSuccessPage(obj);
     clearForm();
