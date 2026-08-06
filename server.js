@@ -24,8 +24,37 @@ const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || 'Roadshow Requests';
 
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
 if (!AIRTABLE_TOKEN || !AIRTABLE_BASE_ID) {
   console.warn('WARNING: AIRTABLE_TOKEN or AIRTABLE_BASE_ID is not set. Check your .env file.');
+}
+
+if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+  console.warn('WARNING: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is not set. Telegram notifications will be skipped.');
+}
+
+// Fire-and-forget notification — never blocks or fails the caller's request.
+async function notifyTelegram(fields) {
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+
+  const text =
+    `New Roadshow Request\n` +
+    `ID: ${fields['Request ID']}\n` +
+    `Company: ${fields['Company Name']}\n` +
+    `Email: ${fields['Contact Email']}\n` +
+    `Dates: ${fields['Start Date']} to ${fields['End Date']}`;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+    });
+  } catch (err) {
+    console.warn('Telegram notification failed:', err.message);
+  }
 }
 
 // Simple health check — useful to confirm the server is alive
@@ -56,6 +85,7 @@ app.post('/api/submit-request', async (req, res) => {
       return res.status(airtableRes.status).json({ error: data });
     }
 
+    notifyTelegram(payload.fields);
     res.status(200).json(data);
   } catch (err) {
     console.error(err);
