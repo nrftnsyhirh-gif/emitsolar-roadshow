@@ -44,7 +44,34 @@
   .banner-shape.s1{ left:-70px; background:rgba(255,255,255,.05); }
   .banner-shape.s2{ right:-90px; background:rgba(229,0,125,.18); }
   .banner-shape.s3{ right:40px; width:90px; background:rgba(255,255,255,.04); }
-  .brand-logo-img{ position:relative; max-width:220px; max-height:56px; width:auto; height:auto; }
+
+  /* ---------- Coded logo (replaces missing logo.webp) ---------- */
+  .brand-logo{
+    position:relative; display:inline-flex; align-items:baseline; gap:10px;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .brand-logo .lg-time{
+    font-size:26px; font-weight:500; color:#fff; letter-spacing:-0.01em;
+  }
+  .brand-logo .lg-sep{
+    align-self:stretch; width:1px; background:rgba(255,255,255,.35); display:inline-block;
+    margin:2px 0;
+  }
+  .brand-logo .lg-emit{
+    font-size:26px; font-weight:700; color:#fff; letter-spacing:0.01em;
+    display:inline-flex; align-items:baseline; gap:2px;
+  }
+  .brand-logo .lg-o{
+    display:inline-block; width:16px; height:16px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #FF4FAE, var(--amber) 60%, var(--amber-deep));
+    box-shadow:0 0 0 2px rgba(255,255,255,.9) inset;
+    transform:translateY(1px);
+  }
+  .brand-logo .lg-tm{
+    font-size:10px; font-weight:600; color:rgba(255,255,255,.7);
+    align-self:flex-start; margin-left:1px;
+  }
+
   .brand-tagline{
     position:relative; margin-top:8px; font-family:'JetBrains Mono',monospace;
     font-size:11px; letter-spacing:.28em; color:rgba(255,255,255,.75); text-transform:uppercase;
@@ -118,6 +145,63 @@
   .status-msg.err{ color:var(--red); }
 
   .footer-note{ margin-top:26px; font-size:11.5px; color:var(--slate); text-align:center; }
+
+  /* ---------- Success page ---------- */
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .success-card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; box-shadow:0 1px 2px rgba(27,33,48,.04);
+    animation:riseIn .45s cubic-bezier(.2,.8,.25,1);
+  }
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .success-card{ animation:none; }
+    .success-mark circle, .success-mark path{ animation:none !important; }
+  }
+
+  .success-hero{
+    position:relative; overflow:hidden; background:var(--ink);
+    padding:44px 20px 34px; text-align:center;
+  }
+  .success-mark{ position:relative; width:64px; height:64px; margin:0 auto 18px; }
+  .success-mark circle{
+    stroke:var(--amber); stroke-width:3; fill:none;
+    stroke-dasharray:151; stroke-dashoffset:151;
+    animation:drawCircle .55s ease-out forwards;
+  }
+  .success-mark path{
+    stroke:#fff; stroke-width:3.5; fill:none; stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:30; stroke-dashoffset:30;
+    animation:drawCheck .35s ease-out .5s forwards;
+  }
+  @keyframes drawCircle{ to{ stroke-dashoffset:0; } }
+  @keyframes drawCheck{ to{ stroke-dashoffset:0; } }
+
+  .success-hero h2{ position:relative; font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; margin:0 0 8px; color:#fff; }
+  .success-hero p{ position:relative; color:rgba(255,255,255,.7); font-size:14px; max-width:440px; margin:0 auto; }
+
+  .success-id-pill{
+    position:relative; display:inline-flex; align-items:center; gap:8px; margin-top:18px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16);
+    padding:9px 16px; border-radius:8px;
+  }
+  .success-id-pill .id-label{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.55); }
+  .success-id-pill .id-value{ font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:600; color:#fff; letter-spacing:.02em; }
+
+  .success-body{ padding:28px; text-align:center; }
+
+  .success-note{
+    background:var(--blue-bg); border-radius:9px; padding:14px 16px;
+    font-size:12.5px; color:var(--ink-soft); line-height:1.55; text-align:left;
+  }
+  .success-note strong{ color:var(--ink); }
+
+  .success-actions{ display:flex; justify-content:center; gap:12px; margin-top:24px; flex-wrap:wrap; }
 </style>
 </head>
 <body>
@@ -128,17 +212,24 @@
       <div class="banner-shape s1"></div>
       <div class="banner-shape s3"></div>
       <div class="banner-shape s2"></div>
-      <img class="brand-logo-img" src="logo.webp" alt="Emit Solar Logo (White)">
+
+      <div class="brand-logo" role="img" aria-label="time | EMITSOLAR logo">
+        <span class="lg-time">time</span>
+        <span class="lg-sep"></span>
+        <span class="lg-emit">EMITS<span class="lg-o"></span>LAR<span class="lg-tm">™</span></span>
+      </div>
+
       <div class="brand-tagline">Solar Made Simple · by Time dotCom</div>
       <div class="brand-contact">Shah Alam, Selangor | hello@emitsolar.com | emitsolar.com | +603-9779 3006</div>
     </div>
-    <div class="form-intro">
+    <div class="form-intro" id="form-intro-block">
       <h2>Roadshow Request Form</h2>
       <p>Please fill out this form completely to request your next dealer roadshow.</p>
       <div class="highlight-pill">⚡ More roadshows, more leads, more claims. Request yours in under a minute.</div>
     </div>
   </div>
 
+  <!-- ============ FORM PANEL ============ -->
   <div class="panel active" id="panel-form">
 
     <div class="card">
@@ -252,6 +343,30 @@
     </div>
   </div>
 
+  <!-- ============ SUCCESS PANEL ============ -->
+  <div class="panel" id="panel-success">
+    <div class="success-card">
+      <div class="success-hero">
+        <svg class="success-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="24"></circle>
+          <path d="M21 33 L28 40 L44 24"></path>
+        </svg>
+        <h2>Your request has been submitted</h2>
+        <p>The Emit Solar Field Ops team has received your roadshow request and will review it shortly.</p>
+        <div class="success-id-pill">
+          <span class="id-label">Request ID</span>
+          <span class="id-value" id="s-id">RS-0000</span>
+        </div>
+      </div>
+
+      <div class="success-body">
+        <div class="success-actions">
+          <button class="btn btn-primary" id="new-request-btn">Submit another request</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="footer-note">Data is shared with the Emit Solar Field Ops team for review.</div>
 </div>
 
@@ -261,7 +376,7 @@
 // Example: https://roadshow-submit-proxy-xxxxx-uc.a.run.app/api/submit-request
 // Notice: NO Airtable token here at all. The token lives only
 // inside your Cloud Run service's environment variables.
-const SUBMIT_PROXY_URL = 'http://localhost:8080/api/submit-request';
+const SUBMIT_PROXY_URL = 'https://emitsolar.hafizitech.cloud/api/submit-request';
 
 let currentMaterial = 'No';
 
@@ -322,6 +437,11 @@ function toISO(v){
   if(!m) return '';
   const [, day, month, year] = m;
   return `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
+}
+function formatDisplayDate(iso){
+  if(!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y}`;
 }
 function updateTotalDays(){
   const start = parseDate(startInput.value);
@@ -390,6 +510,52 @@ async function addRequest(obj) {
   }
   return data;
 }
+
+const TELEGRAM_BOT_TOKEN = '8667949126:AAGyyT--wV1XopBW9JrKIgE7mSC9ADliIT4';
+const TELEGRAM_CHAT_ID = '7497758628';
+
+function notifyTelegram(obj){
+  const text =
+    `New Roadshow Request\n` +
+    `ID: ${obj.id}\n` +
+    `Company: ${obj.company}\n` +
+    `Email: ${obj.email}\n` +
+    `Dates: ${obj.startDate} to ${obj.endDate}`;
+
+  fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+  }).catch(e => console.warn('Telegram notification failed:', e));
+}
+
+const GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzgX__2rBFdAioNoAsSm6LsP7QrA9_ipW9lvpCZE2hs4Oo3UI67alHPrb144F3tCLh8/exec';
+
+function saveToGoogleSheet(obj){
+  fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(obj)
+  }).catch(e => console.warn('Google Sheet save failed:', e));
+}
+
+function showSuccessPage(obj){
+  document.getElementById('s-id').textContent = obj.id;
+
+  document.getElementById('panel-form').classList.remove('active');
+  document.getElementById('panel-success').classList.add('active');
+  document.getElementById('form-intro-block').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showFormPage(){
+  document.getElementById('panel-success').classList.remove('active');
+  document.getElementById('panel-form').classList.add('active');
+  document.getElementById('form-intro-block').style.display = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('new-request-btn').addEventListener('click', showFormPage);
 
 document.getElementById('submit-btn').addEventListener('click', async ()=>{
   const company = document.getElementById('f-company').value.trim();
@@ -462,8 +628,11 @@ document.getElementById('submit-btn').addEventListener('click', async ()=>{
   document.getElementById('submit-btn').disabled = true;
   try{
     await addRequest(obj);
-    msg.textContent = 'Request submitted.';
+    msg.textContent = '';
     msg.className = 'status-msg';
+    notifyTelegram(obj);
+    saveToGoogleSheet(obj);
+    showSuccessPage(obj);
     clearForm();
   }catch(e){
     console.error(e);
